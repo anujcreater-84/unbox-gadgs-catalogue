@@ -1,25 +1,16 @@
-# UNBOX_GADGS V6 — Complete
+# UNBOX_GADGS V8 — Generic Buy Now
 
-This is a complete replacement package for the public catalogue and admin panel.
+The product CTA is now a generic **Buy Now** button.
 
-## Public site
-- Full responsive dark/yellow catalogue design
-- Supabase product loading
-- Search, category filter and sorting
-- Product details modal
-- MRP/discount display
-- Amazon button when an Amazon URL is stored
-- WhatsApp enquiry
-- Refresh button
-- Mobile navigation
-- Correct relative CSS/JS paths
+The existing database column `amazon_url` is intentionally retained for compatibility, but it is treated as a generic destination URL. You can manually put:
+- Amazon affiliate link
+- Flipkart affiliate link
+- Brand/store affiliate link
+- Direct product URL
+- Any other valid product destination URL
 
-## Admin
-Retains the V5 admin features: Supabase login, product management, Amazon URL/ASIN helper, MRP/discount fields and image upload.
+No new SQL migration is required.
 
-## Deployment
-Upload the files from this package to the root of the GitHub Pages repository. Replace existing files when prompted.
+In the admin panel the field is called **Buy Now / Affiliate Link**.
 
-Do not run SQL again if V2/V3 migrations have already been run.
-
-After committing, wait for GitHub Pages to deploy and hard-refresh with Ctrl+Shift+R.
+If the field is filled, the public product card and product details show **Buy Now ↗** and open that exact URL in a new tab.
