@@ -1,22 +1,21 @@
-# UNBOX_GADGS — Supabase Admin Edition
+# UNBOX_GADGS Catalogue V4
 
-This version keeps GitHub Pages as the public host and uses Supabase for the live product database and admin login.
+Connected to the existing Supabase project.
 
-## Setup
-1. Create a Supabase project.
-2. In Authentication -> Users, create your admin user.
-3. Copy that user's UUID.
-4. Open `supabase_setup.sql`, replace `YOUR_ADMIN_USER_UUID`, and run it in Supabase SQL Editor.
-5. In Supabase Project Settings -> API, copy the Project URL and Publishable key.
-6. Put those into `config.js`. Only the publishable/anon key belongs in browser code. Never use the service_role/secret key.
-7. Upload all files to GitHub Pages, replacing the old website files.
+## What is fixed
+- Supabase URL and publishable key are already configured.
+- Public catalogue reads `published = true` products from Supabase.
+- Cache-busting query strings are added so GitHub Pages picks up V4.
+- Product cards support MRP/discount fields.
+- Product detail can show a Buy on Amazon button when `amazon_url` exists.
+- V3 direct image upload/admin features are retained.
 
-## Admin
-Open `https://YOURUSERNAME.github.io/YOUR-REPOSITORY/admin.html` and sign in with the Supabase user.
+## Upload
+Upload/replace the V4 files in the GitHub repository and commit them.
 
-## Product images
-V1 uses image URLs. The admin form lets you paste an image URL. A later version can add direct Supabase Storage uploads.
+## Database
+Do NOT run the original `supabase_setup.sql` again.
+If V2/V3 migrations were already run, no new SQL is required for this V4 package.
 
-
-## V3 image upload
-Run `supabase_migration_v3_storage.sql` after V2 migration. The admin panel can then upload product images directly to the `product-images` Supabase Storage bucket.
+## Important
+The key in config.js is a Supabase PUBLISHABLE key intended for browser use. Never replace it with an `sb_secret_...` or service-role key.
