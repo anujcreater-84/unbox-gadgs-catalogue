@@ -1,7 +1,25 @@
-# UNBOX_GADGS V5
+# UNBOX_GADGS V6 — Complete
 
-This version fixes the public catalogue JavaScript error caused by binding events to HTML IDs that do not exist (`closeModal`, `contactWhatsapp`). The public page now uses safe event bindings, calls `loadProducts()` successfully, and includes a Refresh button.
+This is a complete replacement package for the public catalogue and admin panel.
 
-No new SQL is required. Upload the V5 files over the existing GitHub Pages files.
+## Public site
+- Full responsive dark/yellow catalogue design
+- Supabase product loading
+- Search, category filter and sorting
+- Product details modal
+- MRP/discount display
+- Amazon button when an Amazon URL is stored
+- WhatsApp enquiry
+- Refresh button
+- Mobile navigation
+- Correct relative CSS/JS paths
 
-Keep the existing Supabase configuration in config.js.
+## Admin
+Retains the V5 admin features: Supabase login, product management, Amazon URL/ASIN helper, MRP/discount fields and image upload.
+
+## Deployment
+Upload the files from this package to the root of the GitHub Pages repository. Replace existing files when prompted.
+
+Do not run SQL again if V2/V3 migrations have already been run.
+
+After committing, wait for GitHub Pages to deploy and hard-refresh with Ctrl+Shift+R.

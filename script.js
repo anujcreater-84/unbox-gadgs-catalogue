@@ -16,6 +16,7 @@ function renderProducts(){const q=$("search").value.toLowerCase().trim(),cat=$("
 function showProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;$("modalContent").innerHTML=`<div class="detail"><div class="detail-image">${imageHtml(p)}</div><div><span class="kicker">${esc((p.category||"").toUpperCase())}</span><h2>${esc(p.name)}</h2><div class="rating">${stars(p.rating)} <span>${p.rating||0}/5 · ${p.reviews||0} reviews</span></div><div class="price">${money(p.price)}</div><p>${esc(p.description||"")}</p><h3>Key specifications</h3><ul class="specs">${(p.specs||[]).map(s=>`<li>${esc(s)}</li>`).join("")}</ul><div class="detail-actions"><button class="wa" id="modalWa">WhatsApp enquiry</button>${p.amazon_url?`<a class="amazon-btn" href="${esc(p.amazon_url)}" target="_blank" rel="noopener noreferrer">Buy on Amazon ↗</a>`:""}</div></div></div>`;$("modal").style.display="block";document.body.style.overflow="hidden";$("modalWa").onclick=()=>enquire(p.id)}
 function enquire(id){const p=products.find(x=>String(x.id)===String(id));const msg=encodeURIComponent(`Hi UNBOX_GADGS, I want to enquire about ${p.name} (${money(p.price)}).`);window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,"_blank")}
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function toggleNav(){const nav=$("nav");if(nav)nav.classList.toggle("open")}
 function closeModal(){
   const modal=$("modal");
   if(modal) modal.style.display="none";
