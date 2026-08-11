@@ -1,2 +1,4 @@
 
 .price-wrap .price{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.price del{font-size:13px;color:#89929b;font-weight:500}.price small{font-size:11px;background:#e8f7ed;color:#16864d;padding:3px 6px;border-radius:5px;font-weight:800}.detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.amazon-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#ffcc00;color:#111;border-radius:8px;padding:11px 14px;font-weight:800}
+
+.catalogue-status{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0}.refresh-btn{border:1px solid #d8dde2;background:#fff;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}
