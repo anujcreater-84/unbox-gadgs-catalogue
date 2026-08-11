@@ -1,39 +1,20 @@
-const WHATSAPP_NUMBER="919999999999";
-const categoryIcons={"Mobile & Gadgets":"📱","Audio":"🎧","Computer":"💻","Accessories":"🔌","Car Accessories":"🚗","Wearables":"⌚"};
-const $=id=>document.getElementById(id);
-const money=n=>"₹"+Number(n).toLocaleString("en-IN");
-const stars=r=>{let full=Math.floor(r), half=r%1>=.5?"½":"";return "★".repeat(full)+half};
-function renderCategories(){
- const names=[...new Set(products.map(p=>p.category))];
- $("categoryGrid").innerHTML=names.map(c=>`<button class="category" onclick="chooseCategory('${c.replaceAll("'","\\'")}')"><div class="cat-icon">${categoryIcons[c]||"◈"}</div><b>${c}</b><small>${products.filter(p=>p.category===c).length} products</small></button>`).join("");
- $("categoryFilter").innerHTML='<option>All</option>'+names.map(c=>`<option>${c}</option>`).join("");
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id); let products=[];
+const icons={"Mobile & Gadgets":"📱",Audio:"🎧",Computer:"💻",Accessories:"🔌","Car Accessories":"🚗",Wearables:"⌚"};
+const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+const stars=r=>"★".repeat(Math.floor(Number(r)||0))+(Number(r)%1>=.5?"½":"");
+async function loadProducts(){
+ if(SUPABASE_URL.startsWith("PASTE_")){ $("resultInfo").textContent="Supabase is not connected yet. Add your project URL and publishable key to config.js."; return; }
+ const {data,error}=await sb.from("products").select("*").eq("published",true).order("featured",{ascending:false}).order("created_at",{ascending:false});
+ if(error){console.error(error);$("resultInfo").textContent="Could not load products. Check your Supabase setup.";return}
+ products=data||[]; renderCategories(); renderProducts();
 }
-function imageHTML(p,detail=false){
- return p.image?`<img src="${p.image}" alt="${p.name}" style="max-width:82%;max-height:82%;object-fit:contain">`:`<span class="emoji">${p.emoji||"◈"}</span>`;
-}
-function renderProducts(){
- const q=$("search").value.trim().toLowerCase(), cat=$("categoryFilter").value, sort=$("sort").value;
- let list=products.filter(p=>(cat==="All"||p.category===cat)&&(!q||[p.name,p.brand,p.category].join(" ").toLowerCase().includes(q)));
- if(sort==="low")list.sort((a,b)=>a.price-b.price); if(sort==="high")list.sort((a,b)=>b.price-a.price); if(sort==="rating")list.sort((a,b)=>b.rating-a.rating);
- $("resultInfo").textContent=`Showing ${list.length} of ${products.length} products`;
- $("productGrid").innerHTML=list.length?list.map(p=>`
- <article class="product-card">
-  ${p.badge?`<span class="badge ${p.badge==="NEW"?"green":""}">${p.badge}</span>`:""}
-  <div class="product-image">${imageHTML(p)}</div>
-  <div class="product-body"><h3>${p.name}</h3><div class="rating">${stars(p.rating)} <span>${p.rating} · ${p.reviews} reviews</span></div>
-  <div class="price">${money(p.price)}</div><div class="category-label">${p.brand} · ${p.category}</div>
-  <div class="product-actions"><button onclick="showProduct(${p.id})">View details</button><button class="primary-action" onclick="enquire(${p.id})">Enquire</button></div></div>
- </article>`).join(""):`<div style="grid-column:1/-1;padding:40px;text-align:center;background:#fff;border-radius:14px">No products found. Try another search.</div>`;
-}
-function chooseCategory(c){$("categoryFilter").value=c;$("catalogue").scrollIntoView({behavior:"smooth"});renderProducts()}
-function showProduct(id){
- const p=products.find(x=>x.id===id); if(!p)return;
- $("modalContent").innerHTML=`<div class="detail"><div class="detail-image">${imageHTML(p,true)}</div><div><span class="kicker">${p.category.toUpperCase()}</span><h2>${p.name}</h2><div class="rating">${stars(p.rating)} <span>${p.rating}/5 · ${p.reviews} reviews</span></div><div class="price">${money(p.price)}</div><p>${p.description}</p><h3>Key specifications</h3><ul class="specs">${p.specs.map(s=>`<li>${s}</li>`).join("")}</ul><div class="share-row"><button class="wa" onclick="enquire(${p.id})">WhatsApp enquiry</button><button onclick="shareProduct(${p.id})">Share</button></div></div></div>`;
- $("modal").style.display="block";document.body.style.overflow="hidden";
-}
-function enquire(id){const p=products.find(x=>x.id===id);const msg=encodeURIComponent(`Hi UNBOX_GADGS, I want to enquire about ${p.name} (${money(p.price)}).`);window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,"_blank","noopener")}
-async function shareProduct(id){const p=products.find(x=>x.id===id), data={title:p.name,text:`${p.name} — ${money(p.price)} | UNBOX_GADGS`,url:location.href+"#product-"+p.id};try{if(navigator.share)await navigator.share(data);else await navigator.clipboard.writeText(data.url);alert(navigator.share?"":"Product link copied.")}catch(e){}}
-function closeModal(){$("modal").style.display="none";document.body.style.overflow=""}
-function outsideClose(e){if(e.target.id==="modal")closeModal()}
-function toggleNav(){const n=$("nav");n.style.display=n.style.display==="flex"?"":"flex";n.style.position="absolute";n.style.right="18px";n.style.top="68px";n.style.background="#080b10";n.style.padding="18px";n.style.flexDirection="column";n.style.borderRadius="12px"}
-renderCategories();renderProducts();
+function renderCategories(){const names=[...new Set(products.map(p=>p.category).filter(Boolean))];$("categoryGrid").innerHTML=names.map(c=>`<button class="category" data-cat="${esc(c)}"><div class="cat-icon">${icons[c]||"◈"}</div><b>${esc(c)}</b><small>${products.filter(p=>p.category===c).length} products</small></button>`).join("");$("categoryFilter").innerHTML='<option>All</option>'+names.map(c=>`<option>${esc(c)}</option>`).join("");document.querySelectorAll(".category").forEach(b=>b.addEventListener("click",()=>{$("categoryFilter").value=b.dataset.cat;$("catalogue").scrollIntoView({behavior:"smooth"});renderProducts()}))}
+function imageHtml(p){return p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name)}">`:`<span class="emoji">${icons[p.category]||"◈"}</span>`}
+function renderProducts(){const q=$("search").value.toLowerCase().trim(),cat=$("categoryFilter").value,sort=$("sort").value;let list=products.filter(p=>(cat==="All"||p.category===cat)&&(!q||[p.name,p.brand,p.category].join(" ").toLowerCase().includes(q)));if(sort==="low")list.sort((a,b)=>a.price-b.price);if(sort==="high")list.sort((a,b)=>b.price-a.price);if(sort==="rating")list.sort((a,b)=>(b.rating||0)-(a.rating||0));$("resultInfo").textContent=`Showing ${list.length} of ${products.length} products`;$("productGrid").innerHTML=list.length?list.map(p=>`<article class="product-card">${p.badge?`<span class="badge ${p.badge==="NEW"?"green":""}">${esc(p.badge)}</span>`:""}<div class="product-image">${imageHtml(p)}</div><div class="product-body"><h3>${esc(p.name)}</h3><div class="rating">${stars(p.rating)} <span>${p.rating||0} · ${p.reviews||0} reviews</span></div><div class="price">${money(p.price)}</div><div class="label">${esc(p.brand||"")} · ${esc(p.category||"")}</div><div class="actions"><button data-view="${p.id}">View details</button><button class="primary" data-enquire="${p.id}">Enquire</button></div></div></article>`).join(""):`<div style="grid-column:1/-1;text-align:center;padding:40px;background:#fff;border-radius:14px">No products found.</div>`;document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>showProduct(b.dataset.view));document.querySelectorAll("[data-enquire]").forEach(b=>b.onclick=()=>enquire(b.dataset.enquire))}
+function showProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;$("modalContent").innerHTML=`<div class="detail"><div class="detail-image">${imageHtml(p)}</div><div><span class="kicker">${esc((p.category||"").toUpperCase())}</span><h2>${esc(p.name)}</h2><div class="rating">${stars(p.rating)} <span>${p.rating||0}/5 · ${p.reviews||0} reviews</span></div><div class="price">${money(p.price)}</div><p>${esc(p.description||"")}</p><h3>Key specifications</h3><ul class="specs">${(p.specs||[]).map(s=>`<li>${esc(s)}</li>`).join("")}</ul><button class="wa" id="modalWa">WhatsApp enquiry</button></div></div>`;$("modal").style.display="block";document.body.style.overflow="hidden";$("modalWa").onclick=()=>enquire(p.id)}
+function enquire(id){const p=products.find(x=>String(x.id)===String(id));const msg=encodeURIComponent(`Hi UNBOX_GADGS, I want to enquire about ${p.name} (${money(p.price)}).`);window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,"_blank")}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+$("search").oninput=renderProducts;$("categoryFilter").onchange=renderProducts;$("sort").onchange=renderProducts;$("closeModal").onclick=()=>{$("modal").style.display="none";document.body.style.overflow=""};$("modal").onclick=e=>{if(e.target.id==="modal"){$("modal").style.display="none";document.body.style.overflow=""}};
+$("contactWhatsapp").href=`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi UNBOX_GADGS, I need help choosing a product.")}`;
+loadProducts();
