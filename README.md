@@ -1,16 +1,14 @@
-# UNBOX_GADGS V8 — Generic Buy Now
+# UNBOX_GADGS V10 — Buttons Fixed
 
-The product CTA is now a generic **Buy Now** button.
+This version fixes the public catalogue button handlers.
 
-The existing database column `amazon_url` is intentionally retained for compatibility, but it is treated as a generic destination URL. You can manually put:
-- Amazon affiliate link
-- Flipkart affiliate link
-- Brand/store affiliate link
-- Direct product URL
-- Any other valid product destination URL
+- View details now calls the actual `showProduct()` function.
+- Buy Now is a real anchor and opens the manually supplied destination URL in a new tab.
+- Amazon/affiliate is no longer assumed; any valid `http://` or `https://` URL works.
+- Product detail Buy Now works too.
+- Mobile menu, search, category filters, sort, refresh and modal close are wired safely.
+- Image display remains supported.
+- No database changes are required.
 
-No new SQL migration is required.
-
-In the admin panel the field is called **Buy Now / Affiliate Link**.
-
-If the field is filled, the public product card and product details show **Buy Now ↗** and open that exact URL in a new tab.
+Upload/replace the V10 files in the GitHub Pages repository root.
+After deployment, hard refresh with Ctrl+Shift+R.
