@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="UNBOX_GADGS — discover gadgets, audio gear, accessories and tech products.">
+<meta name="theme-color" content="#0a0d12">
+<title>UNBOX_GADGS — Product Catalogue</title>
+<link rel="icon" href="assets/favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="announcement">UNBOX • TEST • DISCOVER <span>—</span> Curated tech, simplified.</div>
+<header class="header">
+  <a href="#top" class="logo" aria-label="UNBOX GADGS home">
+    <span class="logo-box">U</span>
+    <span><strong>UNBOX<span>_GADGS</span></strong><small>UNBOX. TEST. DISCOVER.</small></span>
+  </a>
+  <nav id="nav">
+    <a href="#top">Home</a><a href="#categories">Categories</a><a href="#catalogue">Products</a><a href="#about">About</a><a href="#contact">Contact</a>
+  </nav>
+  <button class="icon-btn mobile-menu" onclick="toggleNav()" aria-label="Menu">☰</button>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="hero-content">
+    <div class="pill">THE TECH CATALOGUE</div>
+    <h1>Find your next<br><em>favorite gadget.</em></h1>
+    <p>Browse hand-picked gadgets, audio gear, computer accessories and car tech. Compare the basics before you buy.</p>
+    <div class="hero-actions"><a href="#catalogue" class="btn btn-yellow">Explore products <span>→</span></a><a href="#categories" class="btn btn-ghost">Browse categories</a></div>
+    <div class="trust-row"><span>✓ Curated products</span><span>✓ Clear specifications</span><span>✓ Easy enquiry</span></div>
+  </div>
+  <div class="hero-visual">
+    <div class="glow"></div><div class="float-card card-a">🎧<b>Audio</b><small>Hi-Fi & TWS</small></div>
+    <div class="float-card card-b">📱<b>Gadgets</b><small>Latest tech</small></div>
+    <div class="hero-device">◉</div>
+  </div>
+</section>
+
+<section id="categories" class="section">
+  <div class="section-title"><div><span class="kicker">EXPLORE</span><h2>Shop by category</h2></div><p>Jump straight to what you're looking for.</p></div>
+  <div id="categoryGrid" class="category-grid"></div>
+</section>
+
+<section id="catalogue" class="section catalogue">
+  <div class="section-title"><div><span class="kicker">CATALOGUE</span><h2>Featured products</h2></div></div>
+  <div class="toolbar">
+    <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search products, brands or categories…" oninput="renderProducts()"></label>
+    <select id="categoryFilter" onchange="renderProducts()"><option>All</option></select>
+    <select id="sort" onchange="renderProducts()"><option value="featured">Featured</option><option value="low">Price: Low to High</option><option value="high">Price: High to Low</option><option value="rating">Top Rated</option></select>
+  </div>
+  <div id="resultInfo" class="result-info"></div>
+  <div id="productGrid" class="product-grid"></div>
+</section>
+
+<section class="feature-strip"><div>⚡ <b>Curated</b><small>Products worth exploring</small></div><div>◈ <b>Specs</b><small>Useful information at a glance</small></div><div>💬 <b>Enquire</b><small>Ask us on WhatsApp</small></div><div>↗ <b>Share</b><small>Send products to friends</small></div></section>
+
+<section id="about" class="about section">
+  <div><span class="kicker">ABOUT UNBOX_GADGS</span><h2>Tech without the noise.</h2></div>
+  <div><p>UNBOX_GADGS is a product discovery catalogue built for people who want to see the important details before making a decision.</p><p class="muted">This site is a catalogue, not an online checkout. Use the enquiry option to ask about availability, pricing or recommendations.</p></div>
+</section>
+
+<section id="contact" class="contact">
+  <div><span class="kicker">NEED HELP?</span><h2>Not sure what to pick?</h2><p>Tell us what you're looking for and we'll help you shortlist the right products.</p></div>
+  <a class="btn btn-yellow" href="https://wa.me/919999999999?text=Hi%20UNBOX_GADGS%2C%20I%20need%20help%20choosing%20a%20product." target="_blank" rel="noopener">Chat on WhatsApp →</a>
+</section>
+</main>
+
+<footer><div class="footer-inner"><a href="#top" class="logo"><span class="logo-box">U</span><span><strong>UNBOX<span>_GADGS</span></strong><small>UNBOX. TEST. DISCOVER.</small></span></a><div class="footer-links"><a href="#catalogue">Products</a><a href="#categories">Categories</a><a href="#contact">Contact</a></div><p>© 2026 UNBOX_GADGS</p></div></footer>
+
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Product details" onclick="outsideClose(event)">
+ <div class="modal-card"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div>
+</div>
+<script src="products.js"></script><script src="script.js"></script>
+</body></html>
