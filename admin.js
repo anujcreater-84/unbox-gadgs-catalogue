@@ -1,4 +1,16 @@
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const $=id=>document.getElementById(id);let products=[],editing=null;const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+async function uploadProductImage(){
+ const file=$("image_file")?.files?.[0];
+ if(!file) return $("image_url").value.trim();
+ if(file.size>8*1024*1024) throw new Error("Image is larger than 8 MB.");
+ if(!file.type.startsWith("image/")) throw new Error("Please select an image file.");
+ const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+ const path=`${crypto.randomUUID()}.${ext}`;
+ const {error}=await sb.storage.from("product-images").upload(path,file,{contentType:file.type,upsert:false});
+ if(error) throw error;
+ const {data}=sb.storage.from("product-images").getPublicUrl(path);
+ return data.publicUrl;
+}const $=id=>document.getElementById(id);let products=[],editing=null;const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 async function start(){if(SUPABASE_URL.startsWith("PASTE_")){ $("loginMsg").textContent="Add your Supabase URL and publishable key to config.js first.";return }const {data:{session}}=await sb.auth.getSession();session?openDashboard():showLogin()}
 function showLogin(){$("loginPanel").hidden=false;$('dashboard').hidden=true}
 async function openDashboard(){const {data:{user}}=await sb.auth.getUser();$('userArea').innerHTML=`<span style="font-size:12px">${esc(user.email)}</span> <button id="logout" style="margin-left:10px;padding:7px">Logout</button>`;$('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};$('loginPanel').hidden=true;$('dashboard').hidden=false;await load()}

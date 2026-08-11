@@ -16,3 +16,7 @@ Open `https://YOURUSERNAME.github.io/YOUR-REPOSITORY/admin.html` and sign in wit
 
 ## Product images
 V1 uses image URLs. The admin form lets you paste an image URL. A later version can add direct Supabase Storage uploads.
+
+
+## V3 image upload
+Run `supabase_migration_v3_storage.sql` after V2 migration. The admin panel can then upload product images directly to the `product-images` Supabase Storage bucket.
